@@ -16,9 +16,14 @@ namespace SalesWebMvc.Services
             _dbContext = dbContext;
         }
 
-        public IEnumerable<Seller> FindAll()
+        public IEnumerable<Seller> FindAll() => _dbContext.Set<Seller>().Include(x => x.Department).ToList();
+
+        public Seller InsertSeller(Seller seller)
         {
-            return _dbContext.Set<Seller>().Include(x => x.Department).ToList();
+            _dbContext.Add(seller);
+            _dbContext.SaveChanges();
+
+            return seller;
         }
     }
 }
