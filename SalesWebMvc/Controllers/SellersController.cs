@@ -4,24 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
+using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
 {
     public class SellersController : Controller
     {
-        private readonly SalesWebMvcContext _context;
-        private SellerService _sellerService;
+        private readonly SellerService _sellerService;
+        private readonly DepartmentsService _departmentsService;
 
-        public SellersController(SalesWebMvcContext context)
+        public SellersController(SellerService sellerService, DepartmentsService departmentsService)
         {
-            _context = context;
+            _sellerService = sellerService;
+            _departmentsService = departmentsService;
         }
 
         // GET: Sellers/Index
         public IActionResult Index()
         {
-            IEnumerable<Seller> sellers = new SellerService(_context).FindAll();
+            IEnumerable<Seller> sellers = _sellerService.FindAll();
 
             return View(sellers);
         }
@@ -29,7 +31,10 @@ namespace SalesWebMvc.Controllers
         // GET: Sellers/Create
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentsService.FindAll();
+            var viewModel = new SellerViewModel { Departments = departments.ToList() };
+
+            return View(viewModel);
         }
          
         // POST: Seller/Insert
@@ -37,7 +42,6 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Name,Email,BaseSalary,BirthDate,Department")] Seller seller)
         {
-            _sellerService = new SellerService(_context);
             var result = _sellerService.InsertSeller(seller);
 
             return RedirectToAction("/Index");
