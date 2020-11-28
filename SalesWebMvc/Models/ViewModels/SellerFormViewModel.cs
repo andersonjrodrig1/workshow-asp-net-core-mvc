@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SalesWebMvc.Models.ViewModels
 {
-    public class SellerViewModel
+    public class SellerFormViewModel
     {
         public Seller Seller { get; set; }
 

@@ -32,7 +32,7 @@ namespace SalesWebMvc.Controllers
         public IActionResult Create()
         {
             var departments = _departmentsService.FindAll();
-            var viewModel = new SellerViewModel { Departments = departments.ToList() };
+            var viewModel = new SellerFormViewModel { Departments = departments.ToList() };
 
             return View(viewModel);
         }
