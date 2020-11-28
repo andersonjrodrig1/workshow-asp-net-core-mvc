@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
 using SalesWebMvc.Data;
 using SalesWebMvc.Services;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace SalesWebMvc
 {
@@ -35,11 +36,22 @@ namespace SalesWebMvc
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            var connectionString = Configuration.GetConnectionString("SalesWebMvcContext");
+            var migrationsAssembly = typeof(SalesWebMvcContext).Namespace;
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);            
+
+            services.AddDbContextPool<SalesWebMvcContext>(options =>
+            {
+                options.UseMySql(connectionString,
+                    mysqlOptions =>
+                    {
+                        mysqlOptions.ServerVersion(new Version(5, 5, 51), ServerType.MySql);
+                    });
+            });
 
             services.AddDbContext<SalesWebMvcContext>(
-                options => options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), 
+                options => options.UseMySql(connectionString,
                 builder => builder.MigrationsAssembly("SalesWebMvc")));
 
             services.AddScoped<SeedingService>();

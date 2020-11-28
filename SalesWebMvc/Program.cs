@@ -19,6 +19,7 @@ namespace SalesWebMvc
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseDefaultServiceProvider(x => x.ValidateScopes = false)
                 .UseStartup<Startup>();
     }
 }

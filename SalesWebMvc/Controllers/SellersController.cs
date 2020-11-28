@@ -40,7 +40,7 @@ namespace SalesWebMvc.Controllers
         // POST: Seller/Insert
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Email,BaseSalary,BirthDate,Department")] Seller seller)
+        public IActionResult Create([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
             var result = _sellerService.InsertSeller(seller);
 
