@@ -1,0 +1,20 @@
+﻿@model SalesWebMvc.Models.Seller
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@ViewData["Title"]</h2>
+<br/>
+<p>Deseja realmente remover o vendedor(a) @Html.DisplayFor(modelItem => modelItem.Name)?</p>
+<br />
+<form asp-action="Remove">
+    <div class="form-group">
+        <input type="hidden" asp-for="Id" /> 
+        <input type="submit" value="Remove" class="btn btn-default" />
+    </div>
+</form>
+<br/>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

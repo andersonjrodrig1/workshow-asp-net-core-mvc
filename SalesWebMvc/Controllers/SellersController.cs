@@ -38,11 +38,25 @@ namespace SalesWebMvc.Controllers
         }
          
         // POST: Seller/Insert
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
+        public IActionResult Insert([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
             var result = _sellerService.InsertSeller(seller);
+
+            return RedirectToAction("/Index");
+        }
+
+        //GET: Seller/Delete
+        public IActionResult Delete([Bind("Id")] int id)
+        {
+            var result = _sellerService.FindById(id);
+
+            return View(result);
+        }
+
+        // DELETE: Seller/Remove
+        public IActionResult Remove([Bind("Id")] int id)
+        {
+            _sellerService.Remove(id);
 
             return RedirectToAction("/Index");
         }

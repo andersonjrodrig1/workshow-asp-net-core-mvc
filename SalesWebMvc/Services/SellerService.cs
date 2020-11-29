@@ -21,9 +21,21 @@ namespace SalesWebMvc.Services
         public Seller InsertSeller(Seller seller)
         {
             _dbContext.Add(seller);
-            _dbContext.SaveChanges();
+            SaveChanges();
 
             return seller;
         }
+
+        public Seller FindById(int id) => _dbContext.Set<Seller>().Include(x => x.Department).FirstOrDefault(x => x.Id == id);
+
+        public void Remove(int id)
+        {
+            var seller = FindById(id);
+
+            _dbContext.Set<Seller>().Remove(seller);
+            SaveChanges();
+        }
+
+        private void SaveChanges() => _dbContext.SaveChanges(true);
     }
 }
