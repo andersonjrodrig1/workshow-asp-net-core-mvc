@@ -16,6 +16,42 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
-        public IEnumerable<Department> FindAll() => _context.Set<Department>().AsQueryable().AsNoTracking().ToList();
+        public async Task<Department> FindById(int id) => await _context.Set<Department>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+        public async Task<IEnumerable<Department>> FindAll() => await _context.Set<Department>().AsQueryable().AsNoTracking().ToListAsync();
+
+        public async Task<Department> Details(int id)
+        {
+            var departament = await _context.Departament.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (departament == null)
+                return null;
+
+            return departament;
+        }
+
+        public async Task<Department> Create(Department department)
+        {
+            _context.Set<Department>().Add(department);
+            await SaveChangesAsync();
+
+            return department;
+        }
+
+        public async Task<Department> Update(Department department)
+        {
+            _context.Set<Department>().Update(department);
+            await SaveChangesAsync();
+
+            return department;
+        }
+
+        public async Task Remove(Department department)
+        {
+            _context.Set<Department>().Remove(department);
+            await SaveChangesAsync();
+        }
+
+        private async Task SaveChangesAsync() => await _context.SaveChangesAsync(true);
     }
 }

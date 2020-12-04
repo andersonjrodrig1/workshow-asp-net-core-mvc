@@ -31,7 +31,7 @@ namespace SalesWebMvc.Controllers
         // GET: Sellers/Create
         public IActionResult Create()
         {
-            var departments = _departmentsService.FindAll();
+            var departments = _departmentsService.FindAll().GetAwaiter().GetResult();
             var viewModel = new SellerFormViewModel { Departments = departments.ToList() };
 
             return View(viewModel);
@@ -59,6 +59,14 @@ namespace SalesWebMvc.Controllers
             _sellerService.Remove(id);
 
             return RedirectToAction("/Index");
+        }
+
+        // GET: Seller/Details
+        public IActionResult Details([Bind("Id")] int id)
+        {
+            var seller = _sellerService.FindById(id);
+
+            return View(seller);
         }
     }
 }
