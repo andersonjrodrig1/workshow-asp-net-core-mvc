@@ -68,5 +68,21 @@ namespace SalesWebMvc.Controllers
 
             return View(seller);
         }
+
+        // GET: Seller/Edit
+        public IActionResult Edit([Bind("Id")] int id)
+        {
+            var seller = _sellerService.GetSellerById(id);
+
+            return View(seller);
+        }
+
+        //UPDATE: Seller/Update
+        public IActionResult Update([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
+        {
+            _sellerService.UpdateSeller(seller);
+
+            return RedirectToAction("/Index");
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
+using SalesWebMvc.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,12 @@ namespace SalesWebMvc.Services
             return seller;
         }
 
+        public void UpdateSeller(Seller seller)
+        {
+            _dbContext.Update(seller);
+            SaveChanges();
+        }
+
         public Seller FindById(int id) => _dbContext.Set<Seller>().Include(x => x.Department).FirstOrDefault(x => x.Id == id);
 
         public void Remove(int id)
@@ -34,6 +41,18 @@ namespace SalesWebMvc.Services
 
             _dbContext.Set<Seller>().Remove(seller);
             SaveChanges();
+        }
+
+        public SellerFormViewModel GetSellerById(int id)
+        {
+            var departments = _dbContext.Set<Department>().AsQueryable().AsNoTracking().ToList();
+            var seller = _dbContext.Set<Seller>().AsQueryable().AsNoTracking().FirstOrDefault(x => x.Id == id);
+
+            return new SellerFormViewModel()
+            {
+                Seller = seller,
+                Departments = departments
+            };
         }
 
         private void SaveChanges() => _dbContext.SaveChanges(true);
