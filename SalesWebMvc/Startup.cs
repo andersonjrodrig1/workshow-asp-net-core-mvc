@@ -14,6 +14,8 @@ using SalesWebMvc.Models;
 using SalesWebMvc.Data;
 using SalesWebMvc.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace SalesWebMvc
 {
@@ -54,6 +56,8 @@ namespace SalesWebMvc
                 options => options.UseMySql(connectionString,
                 builder => builder.MigrationsAssembly("SalesWebMvc")));
 
+            services.AddLocalization();
+
             services.AddScoped<SeedingService>();
             services.AddScoped<DepartmentsService>();
             services.AddScoped<SellerService>();
@@ -72,6 +76,15 @@ namespace SalesWebMvc
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("pt-BR"),
+                SupportedCultures = new[] { new CultureInfo("pt-BR") },
+                FallBackToParentCultures = false
+            });
+
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CreateSpecificCulture("pt-BR");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
