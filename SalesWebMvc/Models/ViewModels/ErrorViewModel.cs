@@ -6,6 +6,8 @@ namespace SalesWebMvc.Models.ViewModels
     {
         public string RequestId { get; set; }
 
+        public string MessageError { get; set; }
+
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }

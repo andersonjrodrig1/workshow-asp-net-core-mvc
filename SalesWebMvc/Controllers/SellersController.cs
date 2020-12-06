@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -23,66 +24,133 @@ namespace SalesWebMvc.Controllers
         // GET: Sellers/Index
         public IActionResult Index()
         {
-            IEnumerable<Seller> sellers = _sellerService.FindAll();
+            try
+            {
+                IEnumerable<Seller> sellers = _sellerService.FindAll();
 
-            return View(sellers);
+                return View(sellers);
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         // GET: Sellers/Create
         public IActionResult Create()
         {
-            var departments = _departmentsService.FindAll().GetAwaiter().GetResult();
-            var viewModel = new SellerFormViewModel { Departments = departments.ToList() };
+            try
+            {
+                var departments = _departmentsService.FindAll().GetAwaiter().GetResult();
+                var viewModel = new SellerFormViewModel { Departments = departments.ToList() };
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
          
         // POST: Seller/Insert
         public IActionResult Insert([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
-            var result = _sellerService.InsertSeller(seller);
+            try
+            {
+                var result = _sellerService.InsertSeller(seller);
 
-            return RedirectToAction("/Index");
+                return RedirectToAction("/Index");
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         //GET: Seller/Delete
         public IActionResult Delete([Bind("Id")] int id)
         {
-            var result = _sellerService.FindById(id);
+            try
+            {
+                var result = _sellerService.FindById(id);
 
-            return View(result);
+                return View(result);
+            }
+            catch (Exception app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         // DELETE: Seller/Remove
         public IActionResult Remove([Bind("Id")] int id)
         {
-            _sellerService.Remove(id);
+            try
+            {
+                _sellerService.Remove(id);
 
-            return RedirectToAction("/Index");
+                return RedirectToAction("/Index");
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         // GET: Seller/Details
         public IActionResult Details([Bind("Id")] int id)
         {
-            var seller = _sellerService.FindById(id);
+            try
+            {
+                var seller = _sellerService.FindById(id);
 
-            return View(seller);
+                return View(seller);
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         // GET: Seller/Edit
         public IActionResult Edit([Bind("Id")] int id)
         {
-            var seller = _sellerService.GetSellerById(id);
+            try
+            {
+                var seller = _sellerService.GetSellerById(id);
 
-            return View(seller);
+                return View(seller);
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
         }
 
         //UPDATE: Seller/Update
         public IActionResult Update([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
-            _sellerService.UpdateSeller(seller);
+            try
+            {
+                _sellerService.UpdateSeller(seller);
 
-            return RedirectToAction("/Index");
+                return RedirectToAction("/Index");
+            }
+            catch (ApplicationException app)
+            {
+                return RedirectToAction(nameof(Error), new { message = app.Message });
+            }
+        }
+
+        public IActionResult Error(string message)
+        {
+            var error = new ErrorViewModel()
+            {
+                MessageError = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(error);
         }
     }
 }

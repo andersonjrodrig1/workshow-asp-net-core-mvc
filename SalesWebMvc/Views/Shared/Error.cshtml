@@ -9,7 +9,16 @@
 @if (Model.ShowRequestId)
 {
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        <strong>Request ID: </strong> 
+        <code>@Model.RequestId</code>
+    </p>
+}
+
+@if (!string.IsNullOrEmpty(Model.MessageError))
+{
+    <p>
+        <strong>Error: </strong>
+        <code>@Model.MessageError</code>
     </p>
 }
 
