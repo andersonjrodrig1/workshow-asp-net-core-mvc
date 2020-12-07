@@ -22,11 +22,11 @@ namespace SalesWebMvc.Controllers
         }
 
         // GET: Sellers/Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                IEnumerable<Seller> sellers = _sellerService.FindAll();
+                IEnumerable<Seller> sellers = await _sellerService.FindAll();
 
                 return View(sellers);
             }
@@ -37,11 +37,11 @@ namespace SalesWebMvc.Controllers
         }
 
         // GET: Sellers/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
-                var departments = _departmentsService.FindAll().GetAwaiter().GetResult();
+                var departments = await _departmentsService.FindAll();
                 var viewModel = new SellerFormViewModel { Departments = departments.ToList() };
 
                 return View(viewModel);
@@ -53,11 +53,11 @@ namespace SalesWebMvc.Controllers
         }
          
         // POST: Seller/Insert
-        public IActionResult Insert([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
+        public async Task<IActionResult> Insert([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
             try
             {
-                var result = _sellerService.InsertSeller(seller);
+                var result = await _sellerService.InsertSeller(seller);
 
                 return RedirectToAction("/Index");
             }
@@ -68,11 +68,11 @@ namespace SalesWebMvc.Controllers
         }
 
         //GET: Seller/Delete
-        public IActionResult Delete([Bind("Id")] int id)
+        public async Task<IActionResult> Delete([Bind("Id")] int id)
         {
             try
             {
-                var result = _sellerService.FindById(id);
+                var result = await _sellerService.FindById(id);
 
                 return View(result);
             }
@@ -83,11 +83,11 @@ namespace SalesWebMvc.Controllers
         }
 
         // DELETE: Seller/Remove
-        public IActionResult Remove([Bind("Id")] int id)
+        public async Task<IActionResult> Remove([Bind("Id")] int id)
         {
             try
             {
-                _sellerService.Remove(id);
+                await _sellerService.Remove(id);
 
                 return RedirectToAction("/Index");
             }
@@ -98,11 +98,11 @@ namespace SalesWebMvc.Controllers
         }
 
         // GET: Seller/Details
-        public IActionResult Details([Bind("Id")] int id)
+        public async Task<IActionResult> Details([Bind("Id")] int id)
         {
             try
             {
-                var seller = _sellerService.FindById(id);
+                var seller = await _sellerService.FindById(id);
 
                 return View(seller);
             }
@@ -113,11 +113,11 @@ namespace SalesWebMvc.Controllers
         }
 
         // GET: Seller/Edit
-        public IActionResult Edit([Bind("Id")] int id)
+        public async Task<IActionResult> Edit([Bind("Id")] int id)
         {
             try
             {
-                var seller = _sellerService.GetSellerById(id);
+                var seller = await _sellerService.GetSellerById(id);
 
                 return View(seller);
             }
@@ -128,11 +128,11 @@ namespace SalesWebMvc.Controllers
         }
 
         //UPDATE: Seller/Update
-        public IActionResult Update([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
+        public async Task<IActionResult> Update([Bind("Id,Name,Email,BaseSalary,BirthDate,DepartmentId")] Seller seller)
         {
             try
             {
-                _sellerService.UpdateSeller(seller);
+                await _sellerService.UpdateSeller(seller);
 
                 return RedirectToAction("/Index");
             }

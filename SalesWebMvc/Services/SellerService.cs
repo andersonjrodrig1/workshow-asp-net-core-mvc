@@ -17,36 +17,36 @@ namespace SalesWebMvc.Services
             _dbContext = dbContext;
         }
 
-        public IEnumerable<Seller> FindAll() => _dbContext.Set<Seller>().Include(x => x.Department).ToList();
+        public async Task<IEnumerable<Seller>> FindAll() => await _dbContext.Set<Seller>().Include(x => x.Department).ToListAsync();
 
-        public Seller InsertSeller(Seller seller)
+        public async Task<Seller> InsertSeller(Seller seller)
         {
             _dbContext.Add(seller);
-            SaveChanges();
+            await SaveChangesAsync();
 
             return seller;
         }
 
-        public void UpdateSeller(Seller seller)
+        public async Task UpdateSeller(Seller seller)
         {
             _dbContext.Update(seller);
-            SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public Seller FindById(int id) => _dbContext.Set<Seller>().Include(x => x.Department).FirstOrDefault(x => x.Id == id);
+        public async Task<Seller> FindById(int id) => await _dbContext.Set<Seller>().Include(x => x.Department).FirstOrDefaultAsync(x => x.Id == id);
 
-        public void Remove(int id)
+        public async Task Remove(int id)
         {
-            var seller = FindById(id);
+            var seller = await FindById(id);
 
             _dbContext.Set<Seller>().Remove(seller);
-            SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public SellerFormViewModel GetSellerById(int id)
+        public async Task<SellerFormViewModel> GetSellerById(int id)
         {
-            var departments = _dbContext.Set<Department>().AsQueryable().AsNoTracking().ToList();
-            var seller = _dbContext.Set<Seller>().AsQueryable().AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var departments = await _dbContext.Set<Department>().AsQueryable().AsNoTracking().ToListAsync();
+            var seller = await _dbContext.Set<Seller>().AsQueryable().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             return new SellerFormViewModel()
             {
@@ -55,6 +55,6 @@ namespace SalesWebMvc.Services
             };
         }
 
-        private void SaveChanges() => _dbContext.SaveChanges(true);
+        private async Task SaveChangesAsync() => await _dbContext.SaveChangesAsync(true);
     }
 }
