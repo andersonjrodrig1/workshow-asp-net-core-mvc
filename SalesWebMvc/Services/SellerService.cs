@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
+using SalesWebMvc.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +38,17 @@ namespace SalesWebMvc.Services
 
         public async Task Remove(int id)
         {
-            var seller = await FindById(id);
+            try
+            {
+                var seller = await FindById(id);
 
-            _dbContext.Set<Seller>().Remove(seller);
-            await SaveChangesAsync();
+                _dbContext.Set<Seller>().Remove(seller);
+                await SaveChangesAsync();
+            }
+            catch(DbUpdateException db)
+            {
+                throw new IntegrityException(db.Message);
+            }
         }
 
         public async Task<SellerFormViewModel> GetSellerById(int id)
